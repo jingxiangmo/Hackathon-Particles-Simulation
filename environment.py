@@ -38,8 +38,7 @@ vert4.append([vector(d, -d, -d), vector(d, d, -d)])
 #
 
 
-L = 1
-
+L = 6
 mass = 4E-3 / 6E23  # helium mass
 Ratom = 0.03  # wildly exaggerated size of helium atom
 k = 1.4E-23  # Boltzmann constant
