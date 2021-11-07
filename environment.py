@@ -26,12 +26,12 @@ L = 6
 # m= ((pi*6^3)/6)/9.98 --> check units, 9.98g/cm3 is the density of water
 mass = pi*(2*0.03)**3/6
 
-#modifier for better visualization of the simulation
+# modifier for better visualization of the simulation
 modifier = 17E-22
 
 
 # enlarged size of particles
-Ratom = gauss(0.03, 0.01)
+Ratom = gauss(0.07, 0.01)
 
 # Boltzmann constant
 k = 1.4E-23
@@ -103,7 +103,6 @@ def setParticulesNumber(num):
     Nparticles = num
 
 
-
 #
 # =================== CREATE PARTICLE ATTRIBUTES ==================== #
 #
@@ -157,7 +156,8 @@ def collisionSimulation():
 
         # Update all positions
         for i in range(Nparticles):
-            particles[i].pos = apos[i] = apos[i] + (p[i] / (mass * modifier)) * dt
+            particles[i].pos = apos[i] = apos[i] + \
+                (p[i] / (mass * modifier)) * dt
 
         # Check for collisions
         hitlist = checkCollisions()
@@ -192,15 +192,17 @@ def collisionSimulation():
             posi = posi - vi * deltat  # back up to contact configuration
             posj = posj - vj * deltat
             mtot = 2 * mass * modifier
-            pcmi = p[i] - ptot * mass*modifier / mtot  # transform momenta to cm frame
+            pcmi = p[i] - ptot * mass*modifier / \
+                mtot  # transform momenta to cm frame
             pcmj = p[j] - ptot * mass*modifier / mtot
             rrel = norm(rrel)
             pcmi = pcmi - 2 * pcmi.dot(rrel) * rrel  # bounce in cm frame
             pcmj = pcmj - 2 * pcmj.dot(rrel) * rrel
             # transform momenta back to lab frame
             p[i] = pcmi + ptot * mass * modifier / mtot
-            p[j] = pcmj + ptot * mass * modifier/ mtot
-            apos[i] = posi + (p[i] / (mass * modifier)) * deltat  # move forward in time
+            p[j] = pcmj + ptot * mass * modifier / mtot
+            apos[i] = posi + (p[i] / (mass * modifier)) * \
+                deltat  # move forward in time
             apos[j] = posj + (p[j] / (mass * modifier)) * deltat
 
         for i in range(Nparticles):
