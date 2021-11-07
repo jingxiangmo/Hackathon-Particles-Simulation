@@ -1,5 +1,8 @@
 from vpython import *
 
+from droplets import drops
+
+
 animation = canvas(width=800, height=400, align='left')
 gray = color.gray(0.7)
 
@@ -17,9 +20,11 @@ r = 0.05
 
 # box sized vectors
 boxbottom = curve(color=gray, radius=r)
-boxbottom.append([vector(-d, -d, -d), vector(-d, -d, d), vector(d, -d, d), vector(d, -d, -d), vector(-d, -d, -d)])
+boxbottom.append([vector(-d, -d, -d), vector(-d, -d, d),
+                 vector(d, -d, d), vector(d, -d, -d), vector(-d, -d, -d)])
 boxtop = curve(color=gray, radius=r)
-boxtop.append([vector(-d, d, -d), vector(-d, d, d), vector(d, d, d), vector(d, d, -d), vector(-d, d, -d)])
+boxtop.append([vector(-d, d, -d), vector(-d, d, d),
+              vector(d, d, d), vector(d, d, -d), vector(-d, d, -d)])
 
 # vertices of the boxes
 vert1 = curve(color=gray, radius=r)
@@ -41,7 +46,8 @@ def person(a, b, c):
     model of a person
     """
     head = sphere(pos=vector(a, b, c), color=color.gray(.6), radius=0.6)
-    body = box(pos=vector(1, b - 1.5, c), size=vector(2, 1, 1), color=vector(0.72, 0.42, 0), axis=vector(0, 1, 0))
+    body = box(pos=vector(1, b - 1.5, c), size=vector(2, 1, 1),
+               color=vector(0.72, 0.42, 0), axis=vector(0, 1, 0))
     compound([body, head])
 
 
@@ -66,7 +72,8 @@ Nparticles = 100  # change this to have more or fewer particles
 particles = []
 p = []
 apos = []
-pavg = sqrt(2 * mass * 1.5 * k * T)  # average kinetic energy p**2/(2mass) = (3/2)kT
+# average kinetic energy p**2/(2mass) = (3/2)kT
+pavg = sqrt(2 * mass * 1.5 * k * T)
 
 
 def inital_particles():
@@ -105,7 +112,8 @@ def checkCollisions():
         for j in range(i):
             aj = apos[j]
             dr = ai - aj
-            if mag2(dr) < r2: hitlist.append([i, j])
+            if mag2(dr) < r2:
+                hitlist.append([i, j])
     return hitlist
 
 
@@ -114,7 +122,8 @@ def collisionSimulation():
         rate(300)
 
         # Update all positions
-        for i in range(Nparticles): particles[i].pos = apos[i] = apos[i] + (p[i] / mass) * dt
+        for i in range(Nparticles):
+            particles[i].pos = apos[i] = apos[i] + (p[i] / mass) * dt
 
         # Check for collisions
         hitlist = checkCollisions()
@@ -130,9 +139,11 @@ def collisionSimulation():
             vj = p[j] / mass
             vrel = vj - vi
             a = vrel.mag2
-            if a == 0: continue;  # exactly same velocities
+            if a == 0:
+                continue  # exactly same velocities
             rrel = posi - posj
-            if rrel.mag > Ratom: continue  # one atom went all the way through another
+            if rrel.mag > Ratom:
+                continue  # one atom went all the way through another
 
             # theta is the angle between vrel and rrel:
             dx = dot(rrel, vrel.hat)  # rrel.mag*cos(theta)
@@ -140,7 +151,8 @@ def collisionSimulation():
             # alpha is the angle of the triangle composed of rrel, path of atom j, and a line
             #   from the center of atom i to the center of atom j where atome j hits atom i:
             alpha = asin(dy / (2 * Ratom))
-            d = (2 * Ratom) * cos(alpha) - dx  # distance traveled into the atom from first contact
+            # distance traveled into the atom from first contact
+            d = (2 * Ratom) * cos(alpha) - dx
             deltat = d / vrel.mag  # time spent moving from first contact to position inside atom
 
             posi = posi - vi * deltat  # back up to contact configuration
@@ -151,7 +163,8 @@ def collisionSimulation():
             rrel = norm(rrel)
             pcmi = pcmi - 2 * pcmi.dot(rrel) * rrel  # bounce in cm frame
             pcmj = pcmj - 2 * pcmj.dot(rrel) * rrel
-            p[i] = pcmi + ptot * mass / mtot  # transform momenta back to lab frame
+            # transform momenta back to lab frame
+            p[i] = pcmi + ptot * mass / mtot
             p[j] = pcmj + ptot * mass / mtot
             apos[i] = posi + (p[i] / mass) * deltat  # move forward in time
             apos[j] = posj + (p[j] / mass) * deltat
@@ -176,5 +189,8 @@ def collisionSimulation():
                 else:
                     p[i].z = -abs(p[i].z)
 
+
+# using droplets
+drops(100)
 
 collisionSimulation()
