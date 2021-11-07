@@ -111,7 +111,7 @@ def create_particles():
     for i in range(Nparticles):
 
         # start coordinates
-        x = -5
+        x = -4.4
         y = 0
         z = 0
         # appends object to list
@@ -225,8 +225,8 @@ def collisionSimulation():
                 else:
                     p[i].z = -abs(p[i].z)
             # mask effect
-            # if apos[i].x == -4:
+            # if floor(apos[i]).x == -4:
             #     if (random() > 0.5):
             #         print("DELETED")
-            #         # hide particle
-            #         particles[i].visible = False
+            #         # change color of particle
+            #         particles[i].color = color.green
