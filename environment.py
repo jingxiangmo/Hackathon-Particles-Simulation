@@ -2,8 +2,7 @@ from random import gauss
 from vpython import *
 from models import *
 from droplets import drops
-
-
+import time
 #
 # ======================== SIMULATION PARAMETERS ======================== #
 #
@@ -97,10 +96,10 @@ def makePerson(mask):
 # ==================== PARTICLES NUMBER ===================== #
 
 
-def setParticulesNumber(num):
+def setParticulesNumber(num, probability):
     # number of particles
     global Nparticles
-    Nparticles = num
+    Nparticles = int(num * probability)
 
 
 #
@@ -230,3 +229,5 @@ def collisionSimulation():
             #         print("DELETED")
             #         # change color of particle
             #         particles[i].color = color.green
+
+

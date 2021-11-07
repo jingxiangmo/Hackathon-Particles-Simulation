@@ -5,7 +5,12 @@ import random
 # num = 100
 
 
-def drops(num):
+def drops(num, probability):
+
+    # probability of droplets being created
+    num = int(num*probability)
+
+
     # create droplets
     droplets = []
 
