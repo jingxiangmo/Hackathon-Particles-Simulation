@@ -2,13 +2,12 @@ from random import gauss
 from vpython import *
 from models import *
 from droplets import drops
-import time
+from datetime import datetime
 #
 # ======================== SIMULATION PARAMETERS ======================== #
 #
 
 animation = canvas(width=800, height=400)
-gray = color.gray(0.7)
 
 animation.title = "COVID-19 Particles Simulation"
 animation.caption = """
@@ -28,6 +27,8 @@ mass = pi*(2*0.03)**3/6
 # modifier for better visualization of the simulation
 modifier = 17E-22
 
+
+gray = color.gray(0.7)
 
 # enlarged size of particles
 Ratom = gauss(0.07, 0.01)
@@ -150,7 +151,12 @@ def checkCollisions():
 
 
 def collisionSimulation():
-    while True:
+
+    # while time is less than 10 seconds
+
+    t1 = datetime.now()
+
+    while (datetime.now()-t1).seconds <= 10:
         rate(600)
 
         # Update all positions
