@@ -1,7 +1,10 @@
 from vpython import *
-
+from models import *
 from droplets import drops
 
+#
+# ======================== SIMULATION PARAMETERS ======================== #
+#
 
 animation = canvas(width=800, height=400, align='left')
 gray = color.gray(0.7)
@@ -13,6 +16,10 @@ Shift-drag to pan left or right
 Middle button or alt/option and drag to zoom
 """
 
+#
+# ================== SIMULATION OF THE ROOM ================= #
+#
+
 # size of the box
 d = 6
 # radius of the container
@@ -21,10 +28,10 @@ r = 0.05
 # box sized vectors
 boxbottom = curve(color=gray, radius=r)
 boxbottom.append([vector(-d, -d, -d), vector(-d, -d, d),
-                 vector(d, -d, d), vector(d, -d, -d), vector(-d, -d, -d)])
+                  vector(d, -d, d), vector(d, -d, -d), vector(-d, -d, -d)])
 boxtop = curve(color=gray, radius=r)
 boxtop.append([vector(-d, d, -d), vector(-d, d, d),
-              vector(d, d, d), vector(d, d, -d), vector(-d, d, -d)])
+               vector(d, d, d), vector(d, d, -d), vector(-d, d, -d)])
 
 # vertices of the boxes
 vert1 = curve(color=gray, radius=r)
@@ -37,46 +44,50 @@ vert2.append([vector(-d, -d, d), vector(-d, d, d)])
 vert3.append([vector(d, -d, d), vector(d, d, d)])
 vert4.append([vector(d, -d, -d), vector(d, d, -d)])
 
+#
+# ==================== 3D PERSON MODEL =================
+#
 
-# =================================== 3D person model =========================================
-
-def person(a, b, c):
-    """
-    vector(a, b, c)
-    model of a person
-    """
-    head = sphere(pos=vector(a, b, c), color=color.gray(.6), radius=0.6)
-    body = box(pos=vector(1, b - 1.5, c), size=vector(2, 1, 1),
-               color=vector(0.72, 0.42, 0), axis=vector(0, 1, 0))
-    compound([body, head])
-
-
-a = 1
-b = 2
-c = 1
-person(a, b, c)
+x_person = -5
+y_person = 0
+z_person = 0
+person(x_person, y_person, z_person)
 
 #
 # ==================== PARTICLES DISPERSION ===================== #
 #
 
-
 L = 6
-mass = 4E-3 / 6E23  # helium mass
-Ratom = 0.03  # wildly exaggerated size of helium atom
-k = 1.4E-23  # Boltzmann constant
-T = 300  # around room temperature
-dt = 1E-5
-Nparticles = 100  # change this to have more or fewer particles
 
+mass = 4E-3 / 6E23
+
+# enlarged size of particles
+Ratom = 0.03
+
+# Boltzmann constant
+k = 1.4E-23
+
+# room temperature
+T = 300
+
+dt = 1E-5
+
+# number of particles
+Nparticles = 250
+
+# create particles
 particles = []
 p = []
 apos = []
-# average kinetic energy p**2/(2mass) = (3/2)kT
-pavg = sqrt(2 * mass * 1.5 * k * T)
+
+pavg = sqrt(2 * mass * 1.5 * k * T) # average kinetic energy p**2/(2mass) = (3/2)kT
 
 
-def inital_particles():
+#
+# =================== CREATE PARTICLE ATTRIBUTES ==================== #
+#
+
+def create_particles():
     for i in range(Nparticles):
         # start coordinates
         x = -5
@@ -84,8 +95,8 @@ def inital_particles():
         z = 0
         # appends object to list
         # , make_trail=True, retain=100,
-        particles.append(sphere(pos=vector(x, y, z), radius=Ratom, color=gray, make_trail=True, retain=100,
-                                trail_radius=0.3 * Ratom))
+        particles.append(sphere(pos=vector(x, y, z), radius=Ratom, color=color.red, make_trail=False, retain=50,
+                                trail_radius=0.02))
         # trail_radius=0.3 * Ratom))
         #
         apos.append(vec(x, y, z))
@@ -93,15 +104,19 @@ def inital_particles():
         theta = pi / 2 * random()
         phi = (2 * pi - 5 * pi / 3 + pi / 3) * random()
         # vector of momentum
-        px = pavg * abs(sin(theta) * cos(phi))
+        px = pavg * abs(sin(theta) * cos(phi))*20
         py = pavg * abs(sin(theta) * sin(phi))
         pz = pavg * cos(theta)
         # append momentum to list
         p.append(vector(px, py, pz))
 
 
-inital_particles()
+create_particles()
 
+
+#
+# ==================== SIMULATE COLLUSION BETWEEN PARTICLES ========================== #
+#
 
 def checkCollisions():
     hitlist = []
@@ -128,7 +143,7 @@ def collisionSimulation():
         # Check for collisions
         hitlist = checkCollisions()
 
-        # If any collisions took place, update momenta of the twoparticles
+        # If any collisions took place, update momenta of the two particles
         for ij in hitlist:
             i = ij[0]
             j = ij[1]
@@ -190,5 +205,5 @@ def collisionSimulation():
                     p[i].z = -abs(p[i].z)
 
 
-drops(100)
-collisionSimulation()
+# drops(100)
+# collisionSimulation()

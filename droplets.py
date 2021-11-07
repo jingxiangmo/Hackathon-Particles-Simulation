@@ -1,7 +1,8 @@
 from vpython import *
 import random
 
-#num = 100
+
+# num = 100
 
 
 def drops(num):
@@ -11,19 +12,19 @@ def drops(num):
     # create the droplets
     for i in range(num):
         droplets.append(sphere(radius=0.01, pos=vector(-5, 0.0001, 0), color=color.cyan,
-                        make_trail=True, retain=50, trail_radius=0.001))
+                               make_trail=True, retain=20, trail_radius=0.001))
 
     # Basic physics variables
     t = 0
     dt = 0.1
     g = 9.8
     # speed
-    vy = 1
-    vx = 1
-    vz = 1
+    vy = 0.5
+    vx = 0.5
+    vz = 0.5
 
     # simulate
-    while droplets[0].pos.y > 0:
+    while droplets[0].pos.y > -2:
         rate(200)
 
         ay = -g
