@@ -3,6 +3,7 @@ from vpython import *
 from models import *
 from droplets import drops
 from datetime import datetime
+
 #
 # ======================== SIMULATION PARAMETERS ======================== #
 #
@@ -22,16 +23,15 @@ Middle button or alt/option and drag to zoom
 L = 6
 
 # m= ((pi*6^3)/6)/9.98 --> check units, 9.98g/cm3 is the density of water
-mass = pi*(2*0.03)**3/6
+mass = pi * (2 * 0.03) ** 3 / 6
 
 # modifier for better visualization of the simulation
 modifier = 17E-22
 
-
 gray = color.gray(0.7)
 
 # enlarged size of particles
-Ratom = gauss(0.07, 0.01)
+Rparticle = gauss(0.07, 0.01)
 
 # Boltzmann constant
 k = 1.4E-23
@@ -49,6 +49,7 @@ apos = []
 # average kinetic energy p**2/(2mass) = (3/2)kT
 
 pavg = sqrt(2 * mass * modifier * 1.5 * k * T)
+
 
 #
 # ================== SIMULATION OF THE ROOM ================= #
@@ -95,7 +96,7 @@ def makePerson(mask):
 
 #
 # ==================== PARTICLES NUMBER ===================== #
-
+#
 
 def setParticulesNumber(num, probability):
     # number of particles
@@ -109,23 +110,19 @@ def setParticulesNumber(num, probability):
 
 def create_particles():
     for i in range(Nparticles):
-
         # start coordinates
         x = -4.4
         y = 0
         z = 0
         # appends object to list
-        # , make_trail=True, retain=100,
-        particles.append(sphere(pos=vector(x, y, z), radius=Ratom, color=color.red, make_trail=False, retain=50,
+        particles.append(sphere(pos=vector(x, y, z), radius=Rparticle, color=color.red, make_trail=False, retain=50,
                                 trail_radius=0.02))
-        # trail_radius=0.3 * Ratom))
-        #
         apos.append(vec(x, y, z))
         # random angle for velocity, only forward particles
         theta = pi / 2 * random()
         phi = (2 * pi - 5 * pi / 3 + pi / 3) * random()
         # vector of momentum
-        px = pavg * abs(sin(theta) * cos(phi))*20
+        px = pavg * abs(sin(theta) * cos(phi)) * 20
         py = pavg * abs(sin(theta) * sin(phi))
         pz = pavg * cos(theta)
         # append momentum to list
@@ -138,7 +135,7 @@ def create_particles():
 
 def checkCollisions():
     hitlist = []
-    r2 = 2 * Ratom
+    r2 = 2 * Rparticle
     r2 *= r2
     for i in range(Nparticles):
         ai = apos[i]
@@ -151,18 +148,17 @@ def checkCollisions():
 
 
 def collisionSimulation():
-
-    # while time is less than 10 seconds
-
-    t1 = datetime.now()
-
-    while (datetime.now()-t1).seconds <= 10:
+    while True:
         rate(600)
 
-        # Update all positions
+        #
+        # ==================== PARTICLES COLLISIONS POSITIONS UPDATE ===================== #
+        #
+
+        # check colision and updates positions
         for i in range(Nparticles):
             particles[i].pos = apos[i] = apos[i] + \
-                (p[i] / (mass * modifier)) * dt
+                                         (p[i] / (mass * modifier)) * dt
 
         # Check for collisions
         hitlist = checkCollisions()
@@ -174,40 +170,37 @@ def collisionSimulation():
             ptot = p[i] + p[j]
             posi = apos[i]
             posj = apos[j]
-            vi = p[i] / (mass*modifier)
-            vj = p[j] / (mass*modifier)
+            vi = p[i] / (mass * modifier)
+            vj = p[j] / (mass * modifier)
             vrel = vj - vi
             a = vrel.mag2
             if a == 0:
                 continue  # exactly same velocities
             rrel = posi - posj
-            if rrel.mag > Ratom:
-                continue  # one atom went all the way through another
+            if rrel.mag > Rparticle:
+                continue
 
             # theta is the angle between vrel and rrel:
             dx = dot(rrel, vrel.hat)  # rrel.mag*cos(theta)
             dy = cross(rrel, vrel.hat).mag  # rrel.mag*sin(theta)
-            # alpha is the angle of the triangle composed of rrel, path of atom j, and a line
-            #   from the center of atom i to the center of atom j where atome j hits atom i:
-            alpha = asin(dy / (2 * Ratom))
-            # distance traveled into the atom from first contact
-            d = (2 * Ratom) * cos(alpha) - dx
-            deltat = d / vrel.mag  # time spent moving from first contact to position inside atom
+
+            alpha = asin(dy / (2 * Rparticle))
+            d = (2 * Rparticle) * cos(alpha) - dx
+            deltat = d / vrel.mag
 
             posi = posi - vi * deltat  # back up to contact configuration
             posj = posj - vj * deltat
             mtot = 2 * mass * modifier
-            pcmi = p[i] - ptot * mass*modifier / \
-                mtot  # transform momenta to cm frame
-            pcmj = p[j] - ptot * mass*modifier / mtot
+            pcmi = p[i] - ptot * mass * modifier / \
+                   mtot  # transform momenta to cm frame
+            pcmj = p[j] - ptot * mass * modifier / mtot
             rrel = norm(rrel)
-            pcmi = pcmi - 2 * pcmi.dot(rrel) * rrel  # bounce in cm frame
+            pcmi = pcmi - 2 * pcmi.dot(rrel) * rrel
             pcmj = pcmj - 2 * pcmj.dot(rrel) * rrel
-            # transform momenta back to lab frame
             p[i] = pcmi + ptot * mass * modifier / mtot
             p[j] = pcmj + ptot * mass * modifier / mtot
             apos[i] = posi + (p[i] / (mass * modifier)) * \
-                deltat  # move forward in time
+                      deltat
             apos[j] = posj + (p[j] / (mass * modifier)) * deltat
 
         for i in range(Nparticles):
@@ -229,11 +222,3 @@ def collisionSimulation():
                     p[i].z = abs(p[i].z)
                 else:
                     p[i].z = -abs(p[i].z)
-            # mask effect
-            # if floor(apos[i]).x == -4:
-            #     if (random() > 0.5):
-            #         print("DELETED")
-            #         # change color of particle
-            #         particles[i].color = color.green
-
-

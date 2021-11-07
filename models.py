@@ -17,7 +17,7 @@ def person(x, y, z, mask):
     right_leg = cylinder(pos=vector(x, y - 2.5, z + 0.5), radius=0.3,
                          axis=vector(0, -4, 0), color=color.gray(.6))
 
-    if (mask == True):
+    if mask:
         # mask in front of the head
         mask = box(pos=vector(x+1, z, y), size=vector(0.25, 1, 1),
                    color=vector(0.70, 0.3, 0.5), axis=vector(x+1, y, z))

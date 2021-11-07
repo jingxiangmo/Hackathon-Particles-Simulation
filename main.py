@@ -5,14 +5,6 @@ numParticles = 100
 numDroplets = 100
 
 
-##########################################################
-
-# When you do the masks, reduce the vx of the droplets
-# Might want to make the droplets fall slower (idk how to)
-
-##########################################################
-
-
 def noMask():
     probability = 1
 
@@ -25,7 +17,7 @@ def noMask():
     # creates particles
     create_particles()
     # creates droplets
-    drops(numDroplets, probability)  # whats the percentage of droplets? Assume 1:1 for now
+    drops(numDroplets, probability, 1)  # whats the percentage of droplets? Assume 1:1 for now
     # simulate particules movement
     collisionSimulation()
 
@@ -42,7 +34,7 @@ def normalMask():
     # creates particles
     create_particles()
     # creates droplets
-    drops(numDroplets, probability)  # whats the percentage of droplets? Assume 1:1 for now
+    drops(numDroplets, probability, 0.7)  # whats the percentage of droplets? Assume 1:1 for now
     # simulate particules movement
     collisionSimulation()
 
@@ -61,7 +53,7 @@ def n95Mask():
     # creates particles
     create_particles()
     # creates droplets
-    drops(numDroplets, probability)  # whats the percentage of droplets? Assume 1:1 for now
+    drops(numDroplets, probability, 0.5)  # whats the percentage of droplets? Assume 1:1 for now
     # simulate particules movement
     collisionSimulation()
 
@@ -70,12 +62,12 @@ def n95Mask():
 # =================== DIFFERENT COUGHING TYPES ==================== #
 #
 
-case = input("Enter case (1-3): ")
-if case == "1":
+case = input("Enter case (no_mask, medical_mask, n95_mask): ")
+if case == "no_mask":
     noMask()
-elif case == "2":
+elif case == "medical_mask":
     normalMask()
-elif case == "3":
+elif case == "n95_mask":
     n95Mask()
 else:
     print("please input a valid number")
