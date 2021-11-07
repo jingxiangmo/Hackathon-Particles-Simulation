@@ -2,11 +2,12 @@ from vpython import *
 from models import *
 from droplets import drops
 
+
 #
 # ======================== SIMULATION PARAMETERS ======================== #
 #
 
-animation = canvas(width=800, height=400, align='left')
+animation = canvas(width=800, height=400)
 gray = color.gray(0.7)
 
 animation.title = "COVID-19 Particles Simulation"
@@ -16,50 +17,13 @@ Shift-drag to pan left or right
 Middle button or alt/option and drag to zoom
 """
 
-#
-# ================== SIMULATION OF THE ROOM ================= #
-#
-
-# size of the box
-d = 6
-# radius of the container
-r = 0.05
-
-# box sized vectors
-boxbottom = curve(color=gray, radius=r)
-boxbottom.append([vector(-d, -d, -d), vector(-d, -d, d),
-                  vector(d, -d, d), vector(d, -d, -d), vector(-d, -d, -d)])
-boxtop = curve(color=gray, radius=r)
-boxtop.append([vector(-d, d, -d), vector(-d, d, d),
-               vector(d, d, d), vector(d, d, -d), vector(-d, d, -d)])
-
-# vertices of the boxes
-vert1 = curve(color=gray, radius=r)
-vert2 = curve(color=gray, radius=r)
-vert3 = curve(color=gray, radius=r)
-vert4 = curve(color=gray, radius=r)
-
-vert1.append([vector(-d, -d, -d), vector(-d, d, -d)])
-vert2.append([vector(-d, -d, d), vector(-d, d, d)])
-vert3.append([vector(d, -d, d), vector(d, d, d)])
-vert4.append([vector(d, -d, -d), vector(d, d, -d)])
 
 #
-# ==================== 3D PERSON MODEL =================
+# ======================== SIMULATION CONSTANTS AND ARRAYS ======================== #
 #
-
-x_person = -5
-y_person = 0
-z_person = 0
-person(x_person, y_person, z_person)
-
-#
-# ==================== PARTICLES DISPERSION ===================== #
-#
-
 L = 6
 
-# m= ((pi*6^3)/6)/9.97 --> check units, 9.98g/cm3 is the density of water
+# m= ((pi*6^3)/6)/9.98 --> check units, 9.98g/cm3 is the density of water
 mass = 4E-3 / 6E23
 
 # enlarged size of particles
@@ -73,9 +37,6 @@ T = 300
 
 dt = 1E-5
 
-# number of particles
-Nparticles = 250
-
 # create particles
 particles = []
 p = []
@@ -83,6 +44,57 @@ apos = []
 
 # average kinetic energy p**2/(2mass) = (3/2)kT
 pavg = sqrt(2 * mass * 1.5 * k * T)
+#
+# ================== SIMULATION OF THE ROOM ================= #
+#
+
+
+def makeRoom():
+    # size of the box
+    d = 6
+    # radius of the container
+    r = 0.05
+
+    # box sized vectors
+    boxbottom = curve(color=gray, radius=r)
+    boxbottom.append([vector(-d, -d, -d), vector(-d, -d, d),
+                      vector(d, -d, d), vector(d, -d, -d), vector(-d, -d, -d)])
+    boxtop = curve(color=gray, radius=r)
+    boxtop.append([vector(-d, d, -d), vector(-d, d, d),
+                   vector(d, d, d), vector(d, d, -d), vector(-d, d, -d)])
+
+    # vertices of the boxes
+    vert1 = curve(color=gray, radius=r)
+    vert2 = curve(color=gray, radius=r)
+    vert3 = curve(color=gray, radius=r)
+    vert4 = curve(color=gray, radius=r)
+
+    vert1.append([vector(-d, -d, -d), vector(-d, d, -d)])
+    vert2.append([vector(-d, -d, d), vector(-d, d, d)])
+    vert3.append([vector(d, -d, d), vector(d, d, d)])
+    vert4.append([vector(d, -d, -d), vector(d, d, -d)])
+
+
+#
+# ==================== 3D PERSON MODEL =================
+#
+
+
+def makePerson(mask):
+    x_person = -5
+    y_person = 0
+    z_person = 0
+    person(x_person, y_person, z_person, mask)
+
+
+#
+# ==================== PARTICLES NUMBER ===================== #
+
+
+def setParticulesNumber(num):
+    # number of particles
+    global Nparticles
+    Nparticles = num
 
 
 #
@@ -91,6 +103,7 @@ pavg = sqrt(2 * mass * 1.5 * k * T)
 
 def create_particles():
     for i in range(Nparticles):
+
         # start coordinates
         x = -5
         y = 0
@@ -113,11 +126,8 @@ def create_particles():
         p.append(vector(px, py, pz))
 
 
-create_particles()
-
-
 #
-# ==================== SIMULATE COLLUSION BETWEEN PARTICLES ========================== #
+# ==================== SIMULATE PARTICLE MOVEMENT========================== #
 #
 
 def checkCollisions():
@@ -136,7 +146,7 @@ def checkCollisions():
 
 def collisionSimulation():
     while True:
-        rate(300)
+        rate(600)
 
         # Update all positions
         for i in range(Nparticles):
@@ -206,9 +216,8 @@ def collisionSimulation():
                 else:
                     p[i].z = -abs(p[i].z)
             # mask effect
-            if ((apos[i].x > -4)):  # and deleteFunction == False
-                particles[i].color = color.green
-
-
-# drops(100)
-# collisionSimulation()
+            # if apos[i].x == -4:
+            #     if (random() > 0.5):
+            #         print("DELETED")
+            #         # hide particle
+            #         particles[i].visible = False
