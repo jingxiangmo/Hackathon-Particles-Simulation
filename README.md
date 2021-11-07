@@ -1,5 +1,7 @@
 # 😷 COVID-19: Exploring the Effectiveness of Wearing Masks
 
+https://devpost.com/software/mcla/edit
+
 ## 💡 Inspiration
 Ever since the beginning of the COVID-19 outbreak, there has been some resistance to wearing or not wearing a mask. Our group decided to create a simulation to predict the motion of the cough particles and how they are (or aren’t) impacted by the masks, to help visualize the impact and effectiveness of wearing them.
 
@@ -45,4 +47,5 @@ The conclusion is clear: The masks help filter out particles and make their rang
 
 ## Suggestions? 🥺 👉 👈
 Please comment to let us know what you think!
+
 
