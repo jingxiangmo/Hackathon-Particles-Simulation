@@ -190,4 +190,5 @@ def collisionSimulation():
                     p[i].z = -abs(p[i].z)
 
 
+drops(100)
 collisionSimulation()
