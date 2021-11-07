@@ -10,7 +10,7 @@ def drops(num):
 
     # create the droplets
     for i in range(num):
-        droplets.append(sphere(radius=0.5, pos=vector(-5, 3, 0),
+        droplets.append(sphere(radius=0.5, pos=vector(-5, 3, 0), color=color.cyan,
                         make_trail=True, retain=50, trail_radius=0.03))
 
     # Basic physics variables
