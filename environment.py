@@ -51,8 +51,9 @@ b = 2
 c = 1
 person(a, b, c)
 
+
 #
-# ================= Ball Example =================
+# ==================== PARTICLES DISPERSION ===================== #
 #
 
 
@@ -62,21 +63,21 @@ Ratom = 0.03  # wildly exaggerated size of helium atom
 k = 1.4E-23  # Boltzmann constant
 T = 300  # around room temperature
 dt = 1E-5
-Natoms = 100  # change this to have more or fewer atoms
+Nparticles = 100  # change this to have more or fewe rparticles
 
-Atoms = []
+particles = []
 p = []
 apos = []
 pavg = sqrt(2 * mass * 1.5 * k * T)  # average kinetic energy p**2/(2mass) = (3/2)kT
 
-for i in range(Natoms):
+for i in range(Nparticles):
     # start coordinates
     x = -5
     y = 0
     z = 0
     # appends object to list
     # , make_trail=True, retain=100,
-    Atoms.append(sphere(pos=vector(x, y, z), radius=Ratom, color=gray, make_trail=True, retain=100,
+    particles.append(sphere(pos=vector(x, y, z), radius=Ratom, color=gray, make_trail=True, retain=100,
                         trail_radius=0.3 * Ratom))
     # trail_radius=0.3 * Ratom))
     #
@@ -96,7 +97,7 @@ def checkCollisions():
     hitlist = []
     r2 = 2 * Ratom
     r2 *= r2
-    for i in range(Natoms):
+    for i in range(Nparticles):
         ai = apos[i]
         for j in range(i):
             aj = apos[j]
@@ -109,12 +110,12 @@ while True:
     rate(300)
 
     # Update all positions
-    for i in range(Natoms): Atoms[i].pos = apos[i] = apos[i] + (p[i] / mass) * dt
+    for i in range(Nparticles): particles[i].pos = apos[i] = apos[i] + (p[i] / mass) * dt
 
     # Check for collisions
     hitlist = checkCollisions()
 
-    # If any collisions took place, update momenta of the two atoms
+    # If any collisions took place, update momenta of the twoparticles
     for ij in hitlist:
         i = ij[0]
         j = ij[1]
@@ -148,10 +149,10 @@ while True:
         pcmj = pcmj - 2 * pcmj.dot(rrel) * rrel
         p[i] = pcmi + ptot * mass / mtot  # transform momenta back to lab frame
         p[j] = pcmj + ptot * mass / mtot
-        apos[i] = posi + (p[i] / mass) * deltat  # move forward deltat in time
+        apos[i] = posi + (p[i] / mass) * deltat  # move forward in time
         apos[j] = posj + (p[j] / mass) * deltat
 
-    for i in range(Natoms):
+    for i in range(Nparticles):
         loc = apos[i]
         if abs(loc.x) > L - 0.1:
             if loc.x < 0:
