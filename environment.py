@@ -70,18 +70,25 @@ apos = []
 pavg = sqrt(2 * mass * 1.5 * k * T)  # average kinetic energy p**2/(2mass) = (3/2)kT
 
 for i in range(Natoms):
+    # start coordinates
     x = -5
     y = 0
     z = 0
-
-    Atoms.append(sphere(pos=vector(x, y, z), radius=Ratom, color=gray))
-
+    # appends object to list
+    # , make_trail=True, retain=100,
+    Atoms.append(sphere(pos=vector(x, y, z), radius=Ratom, color=gray, make_trail=True, retain=100,
+                        trail_radius=0.3 * Ratom))
+    # trail_radius=0.3 * Ratom))
+    #
     apos.append(vec(x, y, z))
-    theta = pi * random()
-    phi = 2 * pi * random()
-    px = pavg * sin(theta) * cos(phi)
-    py = pavg * sin(theta) * sin(phi)
+    # random angle for velocity, only forward particles
+    theta = pi/2 * random()
+    phi = (2*pi - 5 * pi/3 + pi/3) * random()
+    # vector of momentum
+    px = pavg * abs(sin(theta) * cos(phi))
+    py = pavg * abs(sin(theta) * sin(phi))
     pz = pavg * cos(theta)
+    # append momentum to list
     p.append(vector(px, py, pz))
 
 
