@@ -7,6 +7,7 @@ drops(100)
 collisionSimulation()
 
 
-# fix droplets
-# delete particles with random function for masks
-# fix the mass function with volume, maybe artificially tone down speed
+# Make droplets disappear
+# make droplets proportional to number of particles
+# create 3 environments
+# clean code
