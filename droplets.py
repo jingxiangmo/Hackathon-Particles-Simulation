@@ -1,41 +1,47 @@
 from vpython import *
 import random
 
-# PROBLEMS:
-# 2. The droplets should spread randomly on z axis
-# 3. The droplets should be launched at the same time
-# 4. The droplets should disappear
 
 
-# MAKE THE PARTICLES DISAPPEAR WHEN <-6
 def drops(num):
     # create droplets
     droplets = []
 
     # create the droplets
     for i in range(num):
-        droplets.append(
-            sphere(radius=0.03, pos=vector(-5, 0.0001, 0), color=color.cyan, make_trail=True, retain=5, trail_radius=0.001))
+        droplets.append(sphere(radius=0.05, pos=vector(-5, 0.0001, 0), color=color.cyan,
+                               make_trail=True, retain=5, trail_radius=0.001))
 
     # Basic physics variables
     t = 0
-    dt = 0.1
+    dt = 5
+    dtz = 50
     g = 9.8
-    # speed, RANDOMIZE
+    # speed
     vy = 0.15
-    vx = 0.5
-    vz = 0.05
+    vx = 0.3
+    vz = 0.01
 
+    switch = 0
     # simulate
-    while droplets[0].pos.y > -6:
-        rate(200)
+    while switch != 1:
+        rate(100)
 
         ay = -g
         for i in range(num):
+            constx = droplets[i].pos.x
+            consty = droplets[i].pos.y
             # change the position and the random direction
             droplets[i].pos.x += vx * dt * random.uniform(0, 2)
-            droplets[i].pos.y += vy * dt * random.uniform(0, 2)
-            droplets[i].pos.z += vz * dt * random.uniform(0, 2)
-
+            droplets[i].pos.y += vy * dt * random.uniform(0, 1)
+            droplets[i].pos.z += vz * dtz * \
+                random.uniform(0, 2) * random.randint(-1, 1)
+            if abs(droplets[i].pos.y) >= 6:
+                # stale droplet
+                droplets[i].pos.y = -6
+                droplets[i].pos.x = constx
+                droplets[i].pos.z = consty
+            if droplets[num - 1].pos.y == 0:
+                switch += 1
         vy += ay / 100 * dt
         t += dt
