@@ -6,7 +6,7 @@ num = 100
 droplets = []
 
 for i in range(num):
-    droplets.append(sphere(radius=0.5, pos=vector(-5, 3, 0), make_trail=True, retain=100, trail_radius=0.03))
+    droplets.append(sphere(radius=0.5, pos=vector(-5, 0, 0), make_trail=True, retain=100, trail_radius=0.03))
 
 t = 0
 dt = 0.1
