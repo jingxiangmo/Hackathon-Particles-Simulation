@@ -19,9 +19,9 @@ def drops(num):
     dt = 0.1
     g = 9.8
     # speed
-    vy = 0.5
+    vy = 0.15
     vx = 0.5
-    vz = 0.5
+    vz = 0
 
     # simulate
     while droplets[0].pos.y > -2:
