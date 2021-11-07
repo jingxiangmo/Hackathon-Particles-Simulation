@@ -2,6 +2,8 @@ from vpython import *
 import random
 
 
+# num = 100
+
 
 def drops(num):
     # create droplets
@@ -24,23 +26,19 @@ def drops(num):
 
     switch = 0
     # simulate
-    while switch != 1:
-        rate(100)
+    while droplets[0].pos.y > -11:
+        rate(10)
 
         ay = -g
         for i in range(num):
-            constx = droplets[i].pos.x
-            consty = droplets[i].pos.y
             # change the position and the random direction
             droplets[i].pos.x += vx * dt * random.uniform(0, 2)
             droplets[i].pos.y += vy * dt * random.uniform(0, 1)
             droplets[i].pos.z += vz * dtz * \
                 random.uniform(0, 2) * random.randint(-1, 1)
-            if abs(droplets[i].pos.y) >= 6:
-                # stale droplet
-                droplets[i].pos.y = -6
-                droplets[i].pos.x = constx
-                droplets[i].pos.z = consty
+            if abs(droplets[i].pos.y) > 6:
+                # delete the droplet if below ground
+                droplets[i].visible = False
             if droplets[num - 1].pos.y == 0:
                 switch += 1
         vy += ay / 100 * dt
