@@ -70,4 +70,4 @@ elif case == "medical_mask":
 elif case == "n95_mask":
     n95Mask()
 else:
-    print("please input a valid number")
+    print("please input a valid case")
