@@ -1,7 +1,7 @@
 from vpython import *
 
 
-def person(x, y, z):
+def person(x, y, z, mask):
     """
     vector(a, b, c)
     model of a person
@@ -17,8 +17,9 @@ def person(x, y, z):
     right_leg = cylinder(pos=vector(x, y - 2.5, z + 0.5), radius=0.3,
                          axis=vector(0, -4, 0), color=color.gray(.6))
 
-    # mask in front of the head
-    mask = box(pos=vector(x+1, z, y), size=vector(0.25, 1, 1),
-               color=vector(0.70, 0.3, 0.5), axis=vector(x+1, y, z))
+    if (mask == True):
+        # mask in front of the head
+        mask = box(pos=vector(x+1, z, y), size=vector(0.25, 1, 1),
+                   color=vector(0.70, 0.3, 0.5), axis=vector(x+1, y, z))
 
     compound([body, head])

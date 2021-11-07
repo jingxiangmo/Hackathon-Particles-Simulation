@@ -3,6 +3,7 @@ from vpython import *
 from models import *
 from droplets import drops
 
+
 #
 # ======================== SIMULATION PARAMETERS ======================== #
 #
@@ -18,53 +19,16 @@ Middle button or alt/option and drag to zoom
 """
 
 #
-# ================== SIMULATION OF THE ROOM ================= #
+# ======================== SIMULATION CONSTANTS AND ARRAYS ======================== #
 #
-
-# size of the box
-d = 6
-# radius of the container
-r = 0.05
-
-#modifier for better visualization of the simulation
-modifier = 17E-22
-
-# box sized vectors
-boxbottom = curve(color=gray, radius=r)
-boxbottom.append([vector(-d, -d, -d), vector(-d, -d, d),
-                  vector(d, -d, d), vector(d, -d, -d), vector(-d, -d, -d)])
-boxtop = curve(color=gray, radius=r)
-boxtop.append([vector(-d, d, -d), vector(-d, d, d),
-               vector(d, d, d), vector(d, d, -d), vector(-d, d, -d)])
-
-# vertices of the boxes
-vert1 = curve(color=gray, radius=r)
-vert2 = curve(color=gray, radius=r)
-vert3 = curve(color=gray, radius=r)
-vert4 = curve(color=gray, radius=r)
-
-vert1.append([vector(-d, -d, -d), vector(-d, d, -d)])
-vert2.append([vector(-d, -d, d), vector(-d, d, d)])
-vert3.append([vector(d, -d, d), vector(d, d, d)])
-vert4.append([vector(d, -d, -d), vector(d, d, -d)])
-
-#
-# ==================== 3D PERSON MODEL =================
-#
-
-x_person = -5
-y_person = 0
-z_person = 0
-person(x_person, y_person, z_person)
-
-#
-# ==================== PARTICLES DISPERSION ===================== #
-#
-
 L = 6
 
 # m= ((pi*6^3)/6)/9.98 --> check units, 9.98g/cm3 is the density of water
 mass = pi*(2*0.03)**3/6
+
+#modifier for better visualization of the simulation
+modifier = 17E-22
+
 
 # enlarged size of particles
 Ratom = gauss(0.03, 0.01)
@@ -77,16 +41,67 @@ T = 300
 
 dt = 1E-5
 
-# number of particles
-Nparticles = 250
-
 # create particles
 particles = []
 p = []
 apos = []
 
 # average kinetic energy p**2/(2mass) = (3/2)kT
+
 pavg = sqrt(2 * mass * modifier * 1.5 * k * T)
+
+#
+# ================== SIMULATION OF THE ROOM ================= #
+#
+
+
+def makeRoom():
+    # size of the box
+    d = 6
+    # radius of the container
+    r = 0.05
+
+    # box sized vectors
+    boxbottom = curve(color=gray, radius=r)
+    boxbottom.append([vector(-d, -d, -d), vector(-d, -d, d),
+                      vector(d, -d, d), vector(d, -d, -d), vector(-d, -d, -d)])
+    boxtop = curve(color=gray, radius=r)
+    boxtop.append([vector(-d, d, -d), vector(-d, d, d),
+                   vector(d, d, d), vector(d, d, -d), vector(-d, d, -d)])
+
+    # vertices of the boxes
+    vert1 = curve(color=gray, radius=r)
+    vert2 = curve(color=gray, radius=r)
+    vert3 = curve(color=gray, radius=r)
+    vert4 = curve(color=gray, radius=r)
+
+    vert1.append([vector(-d, -d, -d), vector(-d, d, -d)])
+    vert2.append([vector(-d, -d, d), vector(-d, d, d)])
+    vert3.append([vector(d, -d, d), vector(d, d, d)])
+    vert4.append([vector(d, -d, -d), vector(d, d, -d)])
+
+
+#
+# ==================== 3D PERSON MODEL =================
+#
+
+
+def makePerson(mask):
+    x_person = -5
+    y_person = 0
+    z_person = 0
+    person(x_person, y_person, z_person, mask)
+
+
+#
+# ==================== PARTICLES NUMBER ===================== #
+
+
+def setParticulesNumber(num):
+    # number of particles
+    global Nparticles
+    Nparticles = num
+
 
 
 #
@@ -118,11 +133,8 @@ def create_particles():
         p.append(vector(px, py, pz))
 
 
-create_particles()
-
-
 #
-# ==================== SIMULATE COLLUSION BETWEEN PARTICLES ========================== #
+# ==================== SIMULATE PARTICLE MOVEMENT========================== #
 #
 
 def checkCollisions():
@@ -211,9 +223,8 @@ def collisionSimulation():
                 else:
                     p[i].z = -abs(p[i].z)
             # mask effect
-            # if ((apos[i].x > -4)):  # and deleteFunction == False
-            #     particles[i].color = color.green
-
-
-# drops(100)
-# collisionSimulation()
+            # if apos[i].x == -4:
+            #     if (random() > 0.5):
+            #         print("DELETED")
+            #         # hide particle
+            #         particles[i].visible = False

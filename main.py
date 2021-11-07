@@ -1,13 +1,28 @@
-from environment import collisionSimulation
+from environment import *
 from droplets import drops
 
-
-# using droplets
-drops(100)
-collisionSimulation()
+numParticles = 100
+numDroplets = 100
 
 
-# Make droplets disappear
-# make droplets proportional to number of particles
-# create 3 environments
-# clean code
+def noMask():
+    # creates environment
+    makeRoom()
+    # creates person without mask
+    makePerson(False)
+    # sets number of particle
+    setParticulesNumber(numParticles)
+    # creates particles
+    create_particles()
+    # creates droplets
+    drops(numDroplets)  # whats the percentage of droplets? Assume 1:1 for now
+    # simulate particules movement
+    collisionSimulation()
+
+
+#
+# =================== DIFFERENT COUGHING TYPES ==================== #
+#
+noMask()
+# mask()
+# n95Mask()
