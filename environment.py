@@ -1,3 +1,4 @@
+from random import gauss
 from vpython import *
 from models import *
 from droplets import drops
@@ -24,6 +25,9 @@ Middle button or alt/option and drag to zoom
 d = 6
 # radius of the container
 r = 0.05
+
+#modifier for better visualization of the simulation
+modifier = 17E-22
 
 # box sized vectors
 boxbottom = curve(color=gray, radius=r)
@@ -60,10 +64,10 @@ person(x_person, y_person, z_person)
 L = 6
 
 # m= ((pi*6^3)/6)/9.98 --> check units, 9.98g/cm3 is the density of water
-mass = 4E-3 / 6E23
+mass = pi*(2*0.03)**3/6
 
 # enlarged size of particles
-Ratom = 0.03
+Ratom = gauss(0.03, 0.01)
 
 # Boltzmann constant
 k = 1.4E-23
@@ -82,7 +86,7 @@ p = []
 apos = []
 
 # average kinetic energy p**2/(2mass) = (3/2)kT
-pavg = sqrt(2 * mass * 1.5 * k * T)
+pavg = sqrt(2 * mass * modifier * 1.5 * k * T)
 
 
 #
@@ -141,7 +145,7 @@ def collisionSimulation():
 
         # Update all positions
         for i in range(Nparticles):
-            particles[i].pos = apos[i] = apos[i] + (p[i] / mass) * dt
+            particles[i].pos = apos[i] = apos[i] + (p[i] / (mass * modifier)) * dt
 
         # Check for collisions
         hitlist = checkCollisions()
@@ -153,8 +157,8 @@ def collisionSimulation():
             ptot = p[i] + p[j]
             posi = apos[i]
             posj = apos[j]
-            vi = p[i] / mass
-            vj = p[j] / mass
+            vi = p[i] / (mass*modifier)
+            vj = p[j] / (mass*modifier)
             vrel = vj - vi
             a = vrel.mag2
             if a == 0:
@@ -175,17 +179,17 @@ def collisionSimulation():
 
             posi = posi - vi * deltat  # back up to contact configuration
             posj = posj - vj * deltat
-            mtot = 2 * mass
-            pcmi = p[i] - ptot * mass / mtot  # transform momenta to cm frame
-            pcmj = p[j] - ptot * mass / mtot
+            mtot = 2 * mass * modifier
+            pcmi = p[i] - ptot * mass*modifier / mtot  # transform momenta to cm frame
+            pcmj = p[j] - ptot * mass*modifier / mtot
             rrel = norm(rrel)
             pcmi = pcmi - 2 * pcmi.dot(rrel) * rrel  # bounce in cm frame
             pcmj = pcmj - 2 * pcmj.dot(rrel) * rrel
             # transform momenta back to lab frame
-            p[i] = pcmi + ptot * mass / mtot
-            p[j] = pcmj + ptot * mass / mtot
-            apos[i] = posi + (p[i] / mass) * deltat  # move forward in time
-            apos[j] = posj + (p[j] / mass) * deltat
+            p[i] = pcmi + ptot * mass * modifier / mtot
+            p[j] = pcmj + ptot * mass * modifier/ mtot
+            apos[i] = posi + (p[i] / (mass * modifier)) * deltat  # move forward in time
+            apos[j] = posj + (p[j] / (mass * modifier)) * deltat
 
         for i in range(Nparticles):
             loc = apos[i]
