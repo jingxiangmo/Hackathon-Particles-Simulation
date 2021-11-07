@@ -6,7 +6,7 @@ from droplets import drops
 # ======================== SIMULATION PARAMETERS ======================== #
 #
 
-animation = canvas(width=800, height=400, align='left')
+animation = canvas(width=800, height=400)
 gray = color.gray(0.7)
 
 animation.title = "COVID-19 Particles Simulation"
@@ -59,7 +59,7 @@ person(x_person, y_person, z_person)
 
 L = 6
 
-# m= ((pi*6^3)/6)/9.97 --> check units, 9.98g/cm3 is the density of water
+# m= ((pi*6^3)/6)/9.98 --> check units, 9.98g/cm3 is the density of water
 mass = 4E-3 / 6E23
 
 # enlarged size of particles
@@ -91,6 +91,7 @@ pavg = sqrt(2 * mass * 1.5 * k * T)
 
 def create_particles():
     for i in range(Nparticles):
+
         # start coordinates
         x = -5
         y = 0
@@ -136,7 +137,7 @@ def checkCollisions():
 
 def collisionSimulation():
     while True:
-        rate(300)
+        rate(600)
 
         # Update all positions
         for i in range(Nparticles):
@@ -206,8 +207,8 @@ def collisionSimulation():
                 else:
                     p[i].z = -abs(p[i].z)
             # mask effect
-            if ((apos[i].x > -4)):  # and deleteFunction == False
-                particles[i].color = color.green
+            # if ((apos[i].x > -4)):  # and deleteFunction == False
+            #     particles[i].color = color.green
 
 
 # drops(100)
