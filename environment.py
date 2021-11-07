@@ -1,5 +1,5 @@
 from vpython import *
-import particle
+import particles
 
 animation = canvas(width=800, height=400, align='left')
 gray = color.gray(0.7)
