@@ -62,7 +62,7 @@ Ratom = 0.03  # wildly exaggerated size of helium atom
 k = 1.4E-23  # Boltzmann constant
 T = 300  # around room temperature
 dt = 1E-5
-Natoms = 200  # change this to have more or fewer atoms
+Natoms = 100  # change this to have more or fewer atoms
 
 Atoms = []
 p = []
@@ -70,14 +70,12 @@ apos = []
 pavg = sqrt(2 * mass * 1.5 * k * T)  # average kinetic energy p**2/(2mass) = (3/2)kT
 
 for i in range(Natoms):
-    x = L * random() - L / 2
-    y = L * random() - L / 2
-    z = L * random() - L / 2
-    if i == 0:
-        Atoms.append(sphere(pos=vector(x, y, z), radius=Ratom, color=color.cyan, make_trail=True, retain=100,
-                            trail_radius=0.3 * Ratom))
-    else:
-        Atoms.append(sphere(pos=vector(x, y, z), radius=Ratom, color=gray))
+    x = -5
+    y = 0
+    z = 0
+
+    Atoms.append(sphere(pos=vector(x, y, z), radius=Ratom, color=gray))
+
     apos.append(vec(x, y, z))
     theta = pi * random()
     phi = 2 * pi * random()
@@ -148,19 +146,19 @@ while True:
 
     for i in range(Natoms):
         loc = apos[i]
-        if abs(loc.x) > L / 2:
+        if abs(loc.x) > L - 0.1:
             if loc.x < 0:
                 p[i].x = abs(p[i].x)
             else:
                 p[i].x = -abs(p[i].x)
 
-        if abs(loc.y) > L / 2:
+        if abs(loc.y) > L - 0.1:
             if loc.y < 0:
                 p[i].y = abs(p[i].y)
             else:
                 p[i].y = -abs(p[i].y)
 
-        if abs(loc.z) > L / 2:
+        if abs(loc.z) > L - 0.1:
             if loc.z < 0:
                 p[i].z = abs(p[i].z)
             else:
