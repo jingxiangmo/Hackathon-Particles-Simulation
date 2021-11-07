@@ -24,6 +24,7 @@ def drops(num):
     vx = 0.3
     vz = 0.01
 
+    switch = 0
     # simulate
     while droplets[0].pos.y > -11:
         rate(1)
