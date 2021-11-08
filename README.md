@@ -45,7 +45,4 @@ The conclusion is clear: The masks help filter out particles and make their rang
 - McCool 2006; Gupta et al. 2009; Park et al. 2010
 - Molina, A., Vyas, P., Khlystov, N., Kumar, S., Kothari, A., Deriso, D., ... & Prakash, M. (2020). Project 1000 x 1000: Centrifugal melt spinning for distributed manufacturing of N95 filtering facepiece respirators. arXiv preprint arXiv:2004.13494.
 
-## Suggestions? 🥺 👉 👈
-Please comment to let us know what you think!
-
 
